@@ -12,6 +12,7 @@
 </head>
 
 <body>
+
     <section class="container" id="app">
         <div class="d-flex flex-row justify-content-between">
             <div class="left-bar">
@@ -25,39 +26,69 @@
             <div class="p-2"></div>
 
             <div class="p-2">
-                <h1 class="">Key</h1>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-danger" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        {{ priorityFilter }}
+                    </button>
+                    <button type="button" class="btn btn-danger" @click="priorityFilter = 'Select priority'">
+                            X
+                    </button>
+                    <div class="dropdown-menu">
+                        <label><input type="radio" v-model="priorityFilter" value="Hight Priority"/>  Hight Priority</label>
+                        <label><input type="radio" v-model="priorityFilter" value="Medium Priority"/>  Medium Priority</label>
+                        <label><input type="radio" v-model="priorityFilter" value="Low Priority"/>  Low Priority</label>
+
+
+                    </div>
+                </div>
             </div>
 
             <div class="p-2">
-                <h1 class="">Sort</h1>
+                <button type="button" class="btn btn-primary" @click="sortTasks()">
+                    Sort by date
+                </button>
             </div>
 
             <div class="p-2">
                 <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addModal">
                     + Add To Do
                 </button>
-
-                <!--ADD Modal -->
+                <!--ADD MODAL-->
                 <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel" aria-hidden="true">
                     <div class="modal-dialog" role="document">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="addModalLabel">Add task in To Do list</h5>
+                                <h3 class="modal-title" id="addModalLabel">Add task in To Do list</h3>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
+                                    <span aria-hidden="true">&times;</span>
                                 </button>
                             </div>
 
-                            <div class="modal-body">
+                            <div class="modal-body d-flex flex-column">
 
-                                <input placeholder="New task" type="text" v-model="new_task.title">
-                                <input placeholder="Task priority" type="text" v-model="new_task.priority">
-                                <textarea placeholder="Description..." type="text" v-model="new_task.desc"></textarea>
+                                <h5 class="modal-title">Task name:</h5>
+                                <input class="form-text" placeholder="New task" type="text" v-model="newTask.title">
+                                <hr>
+                                <h5 class="modal-title">Select task priority:</h5>
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-danger dropleft" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    {{ newTask.priority }}
+                                        </button>
+                                    <div class="dropdown-menu">
+                                        <a class="dropdown-item" @click="selectPriority('Hight Priority')" href="#">Hight Priority</a>
+                                        <a class="dropdown-item" @click="selectPriority('Medium Priority')" href="#">Medium Priority</a>
+                                        <a class="dropdown-item" @click="selectPriority('Low Priority')" href="#">Low Priority</a>
+
+                                    </div>
+                                </div>
+                                <hr>
+                                <h5 class="modal-title">Task description:</h5>
+                                <textarea class="form-group" placeholder="Description..." type="text" v-model="newTask.desc"></textarea>
+
                             </div>
-
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                <button type="button" class="btn btn-success" @click="add_task">ADD</button>
+                                <button type="button" class="btn btn-success" @click="addTask">Add</button>
                             </div>
                         </div>
                     </div>
@@ -83,11 +114,51 @@
                 </aside>
             </transition>
 
-
             <div class="flex-column task-container">
                 <h3 class="">{{"To Do: "+ tasks.length}}</h3>
 
-                <div class="task-block content" v-for="task of tasks">
+                <div class="task-block content" v-for="(task, index) of displayTasks">
+
+                    <!--EDIT MODAL-->
+                    <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h3 class="modal-title" id="editModalLabel">Edit task</h3>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body d-flex flex-column">
+
+                                    <h5 class="modal-title">Current name - {{ task.title }} - {{ editTask.title }}:</h5>
+                                    <input class="form-text" placeholder="New task name" type="text" v-model="editTask.title">
+                                    <hr>
+                                    <h5 class="modal-title">Current task priority - {{ task.priority }}:</h5>
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-danger dropleft" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                {{ editTask.priority }}
+                                            </button>
+                                        <div class="dropdown-menu">
+                                            <a class="dropdown-item" @click="editTask.priority = 'Hight Priority'" href="#">Hight Priority</a>
+                                            <a class="dropdown-item" @click="editTask.priority = 'Medium Priority'" href="#">Medium Priority</a>
+                                            <a class="dropdown-item" @click="editTask.priority = 'Low Priority'" href="#">Low Priority</a>
+
+                                        </div>
+                                    </div>
+                                    <hr>
+                                    <h5 class="modal-title">Task description:</h5>
+                                    <textarea class="form-group" placeholder="Description..." type="text" v-model="editTask.desc"></textarea>
+
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    <button type="button" class="btn btn-success" @click="saveTask(index)">Save</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="d-flex flex-row justify-content-between">
                         <p>
                             {{ task.title }}
@@ -102,11 +173,12 @@
                             <button type="button" class="btn btn-warning dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         <i class="ion-navicon"></i>
                                     </button>
+
                             <div class="dropdown-menu">
                                 <a class="dropdown-item  btn-success" @click="complete(task)" href="#">Complete</a>
-                                <a class="dropdown-item btn-primaru" href="#">Edit</a>
+                                <a class="dropdown-item  btn-success" data-toggle="modal" data-target="#editModal" @click="setEditIndex(index)">Edit</a>
                                 <div class="dropdown-divider"></div>
-                                <a class="dropdown-item btn-danger active" @click="removeTask(task)" href="#">Delete Task</a>
+                                <a class="dropdown-item btn-danger" @click="removeTask(task)" href="#">Delete Task</a>
                             </div>
                         </div>
                     </div>
@@ -121,6 +193,7 @@
                 <h3 class="">{{"Completed: "+ solvedTasks.length}}</h3>
 
                 <div class="task-block content" v-for="solvedTask of solvedTasks">
+
                     <div class="d-flex flex-row justify-content-between">
                         <p>
                             {{ solvedTask.title }}
@@ -137,7 +210,6 @@
                                 </button>
                             <div class="dropdown-menu">
                                 <a class="dropdown-item btn-primaru " @click="returnInToDo(solvedTask)" href="#">Return in To Do</a>
-                                <a class="dropdown-item btn-primaru " href="#">Edit</a>
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item btn-danger active" @click="removeSolvedTask(solvedTask)" href="#">Delete Task</a>
                             </div>
@@ -152,22 +224,12 @@
                 </div>
             </div>
         </div>
-
-
-
-
-
         </div>
-
-
         </div>
         </div>
         </div>
         </div>
     </section>
-
-
-
 
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>

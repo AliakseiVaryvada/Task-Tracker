@@ -47,3 +47,8 @@
     transform: translateX(-10px);
     opacity: 0.5;
 }
+
+.dropdown-menu {
+    width: 100%;
+    background-color: rgba(255, 147, 147);
+}
