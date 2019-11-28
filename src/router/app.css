@@ -1,0 +1,55 @@
+.detailed-car-image {
+    height: 200px;
+}
+
+.pointer {
+    cursor: pointer;
+}
+
+.left-bar-button {
+    background-color: cornflowerblue;
+    text-align: center;
+    height: 100vh;
+    width: 25%;
+}
+
+.left-bar {
+    background-color: cornflowerblue;
+    text-align: center;
+    width: 20%;
+}
+
+.task-container {
+    width: 100%;
+    transition-duration: 1s;
+}
+
+.task-block {
+    height: 100px;
+    transition-property: width;
+    background-color: grey;
+    border: 10px solid burlywood;
+    cursor: move;
+}
+
+
+/* Анимации появления и исчезновения*/
+
+.slide-fade-enter-active {
+    transition: all 1s ease;
+}
+
+.slide-fade-leave-active {
+    transition: all 0s cubic-bezier(1, 1, 0.8, 1);
+}
+
+.slide-fade-enter,
+.slide-fade-leave-to {
+    transform: translateX(-10px);
+    opacity: 0.5;
+}
+
+.dropdown-menu {
+    width: 100%;
+    background-color: rgba(255, 147, 147);
+}
