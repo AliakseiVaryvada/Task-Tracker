@@ -1,11 +1,26 @@
 <template>
   <div class="container" id="app">
-    <div class="d-flex flex-row justify-content-between">
-      <div class="left-bar">
-        <h1>To Do</h1>
+    <div class="d-flex flex-row">
+      <div
+        class="d-flex left-bar justify-content-center align-items-center"
+        v-bind:class="{'left-bar-angle' : !show}"
+      >
+        <!--MAIN LIFT LOGO-->
+        <h1>
+          <a class="d-flex logo align-items-center" href="#">
+            <i class="d-flex fas fa-dot-circle logo-icon"></i>
+            <p class="d-flex logo-text">To Do</p>
+          </a>
+        </h1>
       </div>
-      <div class="p-2"></div>
-      <!--ADD MODAL-->
+      <div class="d-flex mr-auto p-2 bd-highlight align-items-center">
+        <i
+          @click="onClick"
+          class="far fa-arrow-alt-circle-left hide-sidebar"
+          v-bind:class="{ 'rotate' : show}"
+        ></i>
+      </div>
+      <!--MODAL FOR ADD TASK-->
       <div
         class="modal fade"
         id="addModal"
@@ -24,7 +39,13 @@
             </div>
             <div class="modal-body d-flex flex-column">
               <h5 class="modal-title">Task name:</h5>
-              <input class="form-text" placeholder="New task" type="text" v-model="newTask.title" />
+              <input
+                class="form-text"
+                placeholder="New task"
+                type="text"
+                v-model="newTask.title"
+                maxlength="40"
+              />
               <hr />
               <h5 class="modal-title">Select task priority:</h5>
               <div class="btn-group">
@@ -57,6 +78,8 @@
                 placeholder="Description..."
                 type="text"
                 v-model="newTask.desc"
+                maxlength="220"
+                wrap="hard"
               ></textarea>
             </div>
             <div class="modal-footer">
@@ -66,17 +89,25 @@
           </div>
         </div>
       </div>
-      <div class="p-2">
+      <!--END MODAL ADD-->
+      <!--SELECT PRIORITY BUTTON-->
+      <div class="d-flex p-2 align-items-center">
         <div class="btn-group">
           <button
             type="button"
-            class="btn btn-danger"
+            class="btn btn-dark btn-select-prior-angle"
             data-toggle="dropdown"
             aria-haspopup="true"
             aria-expanded="false"
           >{{ priorityFilter }}</button>
-          <button type="button" class="btn btn-danger" @click="priorityFilter = 'Select priority'">X</button>
-          <div class="dropdown-menu">
+          <button
+            type="button"
+            class="btn-outline-dark btn-cancel-priority"
+            @click="priorityFilter = 'Select priority'"
+          >
+            <i class="fas fa-times cancel-hover"></i>
+          </button>
+          <div class="dropdown-menu dropdown-menu-priority">
             <label>
               <input type="radio" v-model="priorityFilter" value="Hight Priority" /> Hight Priority
             </label>
@@ -89,65 +120,79 @@
           </div>
         </div>
       </div>
-
-      <div class="p-2">
-        <button type="button" class="btn btn-primary" @click="sortTasks()">Sort by date</button>
+      <!--END SELECT PRIORITY BUTTON-->
+      <!--SORT BUTTON-->
+      <div class="d-flex p-2 align-items-center">
+        <a @click="sortTasks()">
+          <i
+            class="but-sort"
+            v-bind:class="{'fas fa-sort-numeric-down' : !sortDirection, 'fas fa-sort-numeric-up' : sortDirection }"
+          ></i>
+        </a>
       </div>
-
-      <div class="p-2">
+      <!--END SORT BUTTON-->
+      <!--ADD TASK BUTTON. CALL ADD MODAL-->
+      <div class="d-flex p-2 align-items-center">
         <button
           type="button"
-          class="btn btn-primary"
+          class="btn btn-primary btn-add-to-do-angle"
           data-toggle="modal"
           data-target="#addModal"
         >+ Add To Do</button>
       </div>
-
-      <div class="p-2"></div>
-    </div>
-
-    <div class="d-flex flex-row justify-content-between">
-      <!--HIDE SIDEBAR-->
-      <button class="align-self-start" @click="onClick">
-        <i class="ion-navicon"></i>
-      </button>
-      <div class="d-flex justify-content-end">
-        <!--ROW LIST-->
-        <button @click="placement = false">
-          <i class="ion-navicon"></i>
-        </button>
-        <!--TILE LIST-->
-        <button @click="placement = true">
-          <i class="ion-navicon"></i>
-        </button>
+      <!--END ADD TASK BUTTON-->
+      <!--USER ICON. IN THIS VERSION LOGIN/REGISTRATION IS NOT INCLUDED...COMING SOON:)-->
+      <div class="d-flex p-2 align-items-center">
+        <i class="fas fa-user-tie icon-user-right"></i>
       </div>
     </div>
-
-    <div class="d-flex flex-row">
+    <!--HIDE SIDEBAR-->
+    <div class="d-flex flex-row justify-content-between"></div>
+    <!--LEFT SIDEBAR-->
+    <div class="d-flex flex-row layout">
       <transition name="slide-fade">
         <aside class="left-bar-button" v-show="show">
-          <hr />
-          <div class="btn-group">
-            <button class="btn btn-warning">HOME</button>
-            <button class="btn btn-warning">SETTINGS</button>
-          </div>
-          <hr />
+          <a class="d-flex flex-row left-button" href="#">
+            <div class="left-tab"></div>
+
+            <i class="fas fa-home left-button-icon"></i>
+            <p class="left-button-text">Home</p>
+          </a>
+
+          <a class="d-flex flex-row left-button" href="#">
+            <div class="left-tab"></div>
+            <i class="fas fa-cog left-button-icon"></i>
+            <p class="left-button-text">Settings</p>
+          </a>
         </aside>
       </transition>
+      <!--PLACEMENT BUTTONS AND TODO.LENGTH-->
+      <div class="task-container" v-bind:class="{'expand-container' : !show}">
+        <div class="d-flex flex-row bd-highlight align-items-center">
+          <h3 class="mr-auto p-2 bd-highlight list-title">{{"To Do: ("+ tasks.length+")"}}</h3>
+          <!--TILE LIST-->
+          <a class="p-2 bd-highlight group-list" @click="placement = true">
+            <i class="fas fa-th"></i>
+          </a>
+          <!--ROW LIST-->
+          <a class="p-2 bd-highlight group-list" @click="placement = false">
+            <i class="fas fa-align-justify"></i>
+          </a>
+        </div>
 
-      <div class="task-container">
-        <h3 class>{{"To Do: "+ tasks.length}}</h3>
-
-        <div v-bind:class="{ placetile: placement }">
-          <draggable class="list-group flex-wrap" :list="displayTasks" group="people" @change="log">
+        <!--TASK LIST----------------------------------------------------------------------------->
+        <div v-bind:class="{ placeTile: placement }">
+          <draggable v-bind:class="{ placeTile : placement}" :list="displayTasks" group="people">
             <div
-              class="task-block content list-group-item"
-              v-bind:class="{ tileTaskBlock: placement }"
+              class="task-block content d-flex align-items-center"
+              v-bind:class="{ 'tile-task-block': placement ,'task-priority-color-back-h': task.priority == 'Hight Priority',
+                      'task-priority-color-back-l': task.priority == 'Low Priority',
+                      'task-priority-color-back-m': task.priority == 'Medium Priority'}"
               v-for="(task, index) of displayTasks"
               ondragstart="drag(event)"
               :key="task.id"
             >
-              <!--EDIT MODAL-->
+              <!--START EDIT MODAL-->
               <div
                 class="modal fade"
                 id="editModal"
@@ -165,14 +210,13 @@
                       </button>
                     </div>
                     <div class="modal-body d-flex flex-column">
-                      <h5
-                        class="modal-title"
-                      >Current name - {{ task.title }} - {{ editTask.title }}:</h5>
+                      <h5 class="modal-title">Current name - {{ task.title }}:</h5>
                       <input
                         class="form-text"
                         placeholder="New task name"
                         type="text"
                         v-model="editTask.title"
+                        maxlength="40"
                       />
                       <hr />
                       <h5 class="modal-title">Current task priority - {{ task.priority }}:</h5>
@@ -209,6 +253,7 @@
                         placeholder="Description..."
                         type="text"
                         v-model="editTask.desc"
+                        maxlength="220"
                       ></textarea>
                     </div>
                     <div class="modal-footer">
@@ -218,22 +263,46 @@
                   </div>
                 </div>
               </div>
+              <!--END EDIT MODAL-->
+              <div class="d-flex justify-content-between task-container">
+                <div class="task-logo" v-bind:class="{ hide: placement }">
+                  <p>{{ firstLetter(index) }}</p>
+                </div>
 
-              <div class="d-flex flex-row justify-content-between">
-                <p>{{ task.title }}</p>
-                <p>{{ task.priority }}</p>
-                <p>{{ task.id }}</p>
-                <p v-bind:class="{ hide: placement }">{{ task.createDate }}</p>
-                <div class="btn-group dropleft">
-                  <button
-                    type="button"
-                    class="btn btn-warning dropdown-toggle"
+                <div class="d-flex flex-column task-center-blk">
+                  <div
+                    class="d-flex justify-content-between title-container align-items-center"
+                    v-bind:class="{ 'flex-row': !placement, 'flex-column': placement}"
+                  >
+                    <p class="mr-auto task-title">{{ task.title }}</p>
+
+                    <p
+                      class="task-priority"
+                      v-bind:class="{ 'fas fa-long-arrow-alt-up task-priority-color-h': task.priority == 'Hight Priority',
+                      'fas fa-long-arrow-alt-down task-priority-color-l': task.priority == 'Low Priority',
+                      'fas fa-arrows-alt-v task-priority-color-m': task.priority == 'Medium Priority'}"
+                    >{{ task.priority }}</p>
+
+                    <p
+                      class="task-date d-flex far fa-clock task-date"
+                      v-bind:class="{ hide: placement }"
+                    >{{ task.createDate | dataFilter}}</p>
+                  </div>
+
+                  <div class="task-description">
+                    <p v-bind:class="{ hide: placement }">{{ task.desc }}</p>
+                  </div>
+                </div>
+
+                <div class="d-flex btn-group dropleft align-self-center">
+                  <a
+                    class="task-dropdown"
                     data-toggle="dropdown"
                     aria-haspopup="true"
                     aria-expanded="false"
                   >
-                    <i class="ion-navicon"></i>
-                  </button>
+                    <i class="fas fa-ellipsis-v"></i>
+                  </a>
 
                   <div class="dropdown-menu">
                     <a class="dropdown-item btn-success" @click="complete(task)" href="#">Complete</a>
@@ -252,34 +321,55 @@
                   </div>
                 </div>
               </div>
-
-              <div>
-                <p v-bind:class="{ hide: placement }">> {{ task.desc }}</p>
-              </div>
             </div>
           </draggable>
         </div>
+        <!--END TASKS LIST-->
+        <!--COMPLETED TASKS LIST-->
+        <h3 class="list-title">{{"Completed: ("+ solvedTasks.length+")"}}</h3>
 
-        <h3 class>{{"Completed: "+ solvedTasks.length}}</h3>
+        <div v-bind:class="{ placeTile: placement }">
+          <draggable v-bind:class="{ placeTile : placement}" :list="solvedTasks" group="people">
+            <div
+              class="task-block content d-flex align-items-center"
+              v-bind:class="{ 'tile-task-block': placement ,'task-priority-color-back-h': solvedTask.priority == 'Hight Priority',
+                      'task-priority-color-back-l': solvedTask.priority == 'Low Priority',
+                      'task-priority-color-back-m': solvedTask.priority == 'Medium Priority'}"
+              v-for="(solvedTask, index) of solvedTasks"
+              :key="solvedTask.id"
+            >
+              <div class="d-flex justify-content-between task-container align-items-center">
+                <div class="task-logo" v-bind:class="{ hide: placement }">
+                  <p>{{ firstLetterSolved(index) }}</p>
+                </div>
 
-        <div class="place-tile">
-          <draggable class="list-group" :list="solvedTasks" group="people" @change="log">
-            <div class="task-block content" v-for="solvedTask of solvedTasks" :key="solvedTask.id">
-              <div class="d-flex flex-row justify-content-between">
-                <p>{{ solvedTask.title }}</p>
-                <p>{{ solvedTask.priority }}</p>
-                <p>{{ solvedTask.createDate }}</p>
-                <p>{{ solvedTask.id }}</p>
-                <div class="btn-group dropleft">
-                  <button
-                    type="button"
-                    class="btn btn-warning dropdown-toggle"
+                <div class="d-flex flex-column task-center-blk">
+                  <div
+                    class="d-flex title-container"
+                    v-bind:class="{ 'flex-row': !placement, 'flex-column': placement}"
+                  >
+                    <p class="task-title">{{ solvedTask.title }}</p>
+
+                    <div class="ml-auto d-flex completed align-items-center">
+                      <i class="far fa-check-circle" v-bind:class="{ hide: placement }"></i>
+                      <p class="completed-text" v-bind:class="{ hide: placement }">Completed</p>
+                    </div>
+                  </div>
+
+                  <div class="task-description">
+                    <p v-bind:class="{ hide: placement }">{{ solvedTask.desc }}</p>
+                  </div>
+                </div>
+                <div class="d-flex btn-group dropleft align-self-center">
+                  <a
+                    class="task-dropdown"
                     data-toggle="dropdown"
                     aria-haspopup="true"
                     aria-expanded="false"
                   >
-                    <i class="ion-navicon"></i>
-                  </button>
+                    <i class="fas fa-ellipsis-v"></i>
+                  </a>
+
                   <div class="dropdown-menu">
                     <a
                       class="dropdown-item btn-primaru"
@@ -288,16 +378,12 @@
                     >Return in To Do</a>
                     <div class="dropdown-divider"></div>
                     <a
-                      class="dropdown-item btn-danger active"
+                      class="dropdown-item btn-danger"
                       @click="removeSolvedTask(solvedTask)"
                       href="#"
                     >Delete Task</a>
                   </div>
                 </div>
-              </div>
-
-              <div>
-                <p>{{ solvedTask.desc }}</p>
               </div>
             </div>
           </draggable>
@@ -311,7 +397,9 @@
 // eslint-disable-next-line
 /* eslint-disable */
 import draggable from "vuedraggable";
-
+import VueMomentLib from "vue-moment-lib";
+Vue.use(VueMomentLib);
+var moment = require("moment");
 export default {
   name: "app",
   data() {
@@ -344,54 +432,75 @@ export default {
       },
       tasks: [
         {
-          title: "Изучить основы vue.js",
-          desc: "Попробовать написать калькулятор",
+          title: "Lorem ipsum-1",
+          desc:
+            "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum. ",
           priority: "Hight Priority",
-          createDate: "date",
+          createDate: new Date(),
           id: 0
         },
         {
-          title: 'Прочитать книгу "Vue.js в действии"',
-          desc: "desk",
-          priority: "Hight Priority",
-          createDate: "date",
+          title: "Lorem ipsum-2",
+          desc:
+            "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum. ",
+          priority: "Low Priority",
+          createDate: new Date(),
           id: 1
         },
         {
-          title: 'Прочитать книгу "Vue.js в действии"',
-          desc: "desk",
-          priority: "Hight Priority",
-          createDate: "date",
+          title: "Lorem ipsum-3",
+          desc:
+            "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum. ",
+          priority: "Medium Priority",
+          createDate: new Date(),
           id: 2
         }
       ],
       solvedTasks: [
         {
-          title: "Изучить основы vue.js",
-          desc: "Попробовать написать калькулятор",
-          priority: "Hight priority",
-          createDate: "date",
+          title: "Lorem ipsum-4",
+          desc:
+            "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum. ",
+          priority: "Medium Priority",
+          createDate: new Date(),
           id: 3
         },
         {
-          title: 'Прочитать книгу "Vue.js в действии"',
-          desc: "desk",
-          priority: "Hight Priority",
-          createDate: "date",
+          title: "Lorem ipsum-5",
+          desc:
+            "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum. ",
+          priority: "Low Priority",
+          createDate: new Date(),
           id: 4
         },
         {
-          title: 'Прочитать книгу "Vue.js в действии"',
-          desc: "desk",
+          title: "Lorem ipsum-6",
+          desc:
+            "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. \n Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum. ",
           priority: "Hight Priority",
-          createDate: "date",
+          createDate: new Date(),
           id: 5
         }
       ]
     };
   },
   methods: {
+    setDate() {
+      var a = new Date();
+      return a;
+    },
+    firstLetter(index) {
+      //METHOD FOR LETTER BEFORE TITLE IN TASKS LIST
+      var title = this.tasks[index].title;
+      return title.substr(0, 1).toUpperCase();
+    },
+    firstLetterSolved(index) {
+      //METHOD FOR LETTER BEFORE TITLE IN SOLVED TASKS LIST
+      var title = this.solvedTasks[index].title;
+      return title.substr(0, 1).toUpperCase();
+    },
     onClick: function() {
+      //METHOD FOR SHOW/HIDE SIDEBAR
       this.show = !this.show;
     },
     removeTask: function(task) {
@@ -404,19 +513,23 @@ export default {
       this.solvedTasks.splice(index, 1);
     },
     returnInToDo: function(solvedTask) {
+      //METHOD FOR MARK TASK ACTIVE
       var index = this.solvedTasks.indexOf(solvedTask);
       this.tasks.unshift(solvedTask);
       this.solvedTasks.splice(index, 1);
     },
     complete: function(task) {
+      //METHOD FOR MARK TASK COMPLETE
       var index = this.tasks.indexOf(task);
       this.solvedTasks.unshift(task);
       this.tasks.splice(index, 1);
     },
     setEditIndex(index) {
+      //FIND TASK FOR EDIT
       this.editIndex = index;
     },
     saveTask(index) {
+      // SAVE TASK AFTER EDIT
       this.editTask.title != 0
         ? (this.tasks[this.editIndex].title = this.editTask.title)
         : null;
@@ -450,6 +563,7 @@ export default {
       }
     },
     selectPriority(priority) {
+      //METHOD FOR PRIORITY FILTER
       priority === "Hight Priority"
         ? (this.newTask.priority = "Hight Priority")
         : null;
@@ -461,12 +575,14 @@ export default {
         : null;
     },
     sortTasks() {
+      //METHOD FOR SORT BY DATE
       this.sortDirection = !this.sortDirection;
       this.sortDirection == true
         ? this.tasks.sort((next, prev) => next.createDate - prev.createDate)
         : this.tasks.sort((prev, next) => next.createDate - prev.createDate);
     },
     tileElement() {
+      //METHOD FOR CHANGE PLACEMENT ELEMENTS
       this.placement = "tile";
       var rowBlocks = document.querySelectorAll(".place-tile");
       var tileSize = document.querySelectorAll(".task-block");
@@ -476,9 +592,9 @@ export default {
         element.style.display = "flex";
       });
 
-      tileSize.forEach(element => {
-        element.style.width = "30%";
-      });
+      //tileSize.forEach(element => {
+      // element.style.width = "30%";
+      //});
 
       hideElements.forEach(element => {
         element.style.display = "none";
@@ -500,82 +616,17 @@ export default {
   },
   components: {
     draggable
+  },
+  filters: {
+    dataFilter: function(value) {
+      return moment(value).format("dddd, MMMM DD YYYY, h:mm:ss");
+    }
   }
 };
 </script>
 
 <style>
-.detailed-car-image {
-  height: 200px;
-}
-
-.pointer {
-  cursor: pointer;
-}
-
-.left-bar-button {
-  background-color: cornflowerblue;
-  text-align: center;
-  min-height: 95vh;
-  width: 25%;
-}
-
-.left-bar {
-  background-color: cornflowerblue;
-  text-align: center;
-  width: 20%;
-}
-
-.task-container {
-  width: 100%;
-}
-
-.task-block {
-  height: 100px;
-  transition-property: width;
-  background-color: grey;
-  border: 10px solid burlywood;
-}
-
-.tileTaskBlock {
-  width: 30%;
-  height: 100px;
-  transition-property: width;
-  background-color: grey;
-  border: 10px solid burlywood;
-}
-
-.hide {
-  display: none;
-}
-
-.placetile {
-  display: flex;
-  flex: wrap;
-  width: 100%;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: space-between;
-}
-
-/* Анимации появления и исчезновения*/
-
-.slide-fade-enter-active {
-  transition: all 1s ease;
-}
-
-.slide-fade-leave-active {
-  transition: all 0s cubic-bezier(1, 1, 0.8, 1);
-}
-
-.slide-fade-enter,
-.slide-fade-leave-to {
-  transform: translateX(-10px);
-  opacity: 0.5;
-}
-
-.dropdown-menu {
-  width: 100%;
-  background-color: rgba(255, 147, 147);
-}
+@import url("../node_modules/@fortawesome/fontawesome-free/css/all.css");
+@import url(//db.onlinewebfonts.com/c/b09257add40c807d5566ce0749279050?family=URWRadiantW01-Heavy);
+@import url(style.css);
 </style>

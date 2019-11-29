@@ -1,0 +1,270 @@
+.completed {
+    color: green;
+  }
+  .complete-drop {
+    margin-top: 1%;
+  }
+  .completed-text {
+    margin-bottom: 0;
+  }
+  .task-logo {
+    flex-shrink: 0;
+    margin-left: 1%;
+    margin-right: 1%;
+    width: 50px;
+    font-size: 30px;
+    height: 50px;
+    text-align: center;
+    color: white;
+    border: 2px solid green;
+    background-color: green;
+    border-radius: 50%;
+  }
+  .task-description {
+    word-break: break-all;
+    font-size: 12px;
+  }
+  .task-title {
+    font-size: 18px;
+    margin-bottom: 0px;
+  }
+  .task-priority {
+    margin: 1% 1% 0 0;
+    font-size: 12px;
+  }
+  .task-priority-color-m {
+    color: rgb(2, 105, 136);
+  }
+  .task-priority-color-l {
+    color: rgb(47, 124, 58);
+  }
+  .task-priority-color-h {
+    color: rgb(223, 70, 9);
+  }
+  
+  .task-priority-color-back-m {
+    background-color: rgba(211, 190, 69, 0.377);
+  }
+  .task-priority-color-back-l {
+    background-color: rgba(179, 247, 134, 0.377);
+  }
+  .task-priority-color-back-h {
+    background-color: rgba(255, 73, 1, 0.377);
+  }
+  
+  .task-date {
+    margin: 1% 1% 0 2%;
+    font-size: 12px;
+    color: rgb(82, 82, 82);
+  }
+  .fa-ellipsis-v {
+    font-size: 30px;
+    color: rgb(160, 160, 160);
+    transition: 0.5s;
+    padding-right: 10px;
+  }
+  .fa-ellipsis-v:hover {
+    color: rgb(74, 74, 75);
+  }
+  body {
+    background-color: #dee7ed;
+  }
+  
+  .task-center-blk {
+    flex-grow: 1;
+  }
+  .list-title {
+    font-weight: 600;
+    font-family: sans-serif;
+  }
+  .group-list {
+    font-size: 25px;
+    cursor: pointer;
+    transition: 0.5s;
+  }
+  .fa-th:hover,
+  .fa-sort-numeric-up:hover,
+  .fa-sort-numeric-down:hover,
+  .fa-align-justify:hover,
+  .fa-arrow-alt-circle-left:hover {
+    color: rgb(93, 117, 161);
+  }
+  
+  .icon-user-right {
+    font-size: 40px;
+    color: rgb(39, 61, 102);
+    cursor: pointer;
+  }
+  .btn-add-to-do-angle {
+    border-radius: 17px 17px 17px 17px;
+  }
+  .but-sort {
+    font-size: 35px;
+    cursor: pointer;
+    transition: 0.5s;
+  }
+  a:hover {
+    text-decoration: none;
+  }
+  .cancel-hover {
+    transition: 0.5s;
+  }
+  .cancel-hover:hover {
+    transform: rotate(360deg);
+    color: black;
+  }
+  .btn-cancel-priority {
+    border-radius: 0px 17px 17px 0px;
+    background-color: white;
+    outline: none;
+  }
+  .btn-cancel-priority:hover {
+    background-color: white;
+  }
+  .btn-select-prior-angle {
+    border-radius: 17px 0px 0px 17px;
+  }
+  
+  .logo-text {
+    font-family: "URWRadiantW01-Heavy";
+    padding-left: 10px;
+  }
+  .logo-text {
+    padding: 0;
+    margin: 0;
+  }
+  
+  .left-button:hover {
+    background-color: rgba(28, 101, 143, 0.733);
+  }
+  .left-button:hover div {
+    background-color: rgb(108, 167, 255);
+  }
+  .left-button {
+    height: 10%;
+    align-items: center;
+    padding: 0;
+  }
+  .left-tab {
+    display: block;
+    background-color: rgb(39, 61, 102);
+    height: 100%;
+    padding-left: 10px;
+  }
+  .left-button-icon {
+    margin-left: 30px;
+    color: rgb(108, 167, 255);
+  }
+  .left-button-text {
+    padding: 0 0 0 10px;
+    margin: 0;
+    color: white;
+  }
+  .layout {
+    flex-flow: row nowrap;
+  }
+  .detailed-car-image {
+    height: 200px;
+  }
+  
+  .pointer {
+    cursor: pointer;
+  }
+  
+  .left-bar-button {
+    background-color: rgb(39, 61, 102);
+    text-align: center;
+    min-height: 95vh;
+    width: 25%;
+    flex-grow: 0;
+    cursor: pointer;
+  }
+  
+  .left-bar {
+    background-color: rgb(39, 61, 102);
+    width: 20%;
+    transition: 0.5s;
+    padding-top: 10px;
+  }
+  .left-bar-angle {
+    border-radius: 0px 0px 40px 40px;
+  }
+  
+  .task-container {
+    width: 100%;
+    transition: flex 0.4s ease;
+  }
+  
+  .task-block {
+    height: 100px;
+    transition-property: width;
+  
+    border: 7px solid #dee7ed;
+    border-radius: 17px;
+  }
+  
+  .tile-task-block {
+    display: flex;
+    width: 30%;
+    height: 100px;
+    transition-property: width;
+    background-color: white;
+    border: 7px solid #dee7ed;
+    border-radius: 17px;
+  }
+  
+  .hide {
+    display: none;
+  }
+  
+  .placeTile {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    flex-direction: row;
+  }
+  .hide-sidebar {
+    color: rgb(39, 61, 102);
+    transition: 0.5s;
+    font-size: 35px;
+    cursor: pointer;
+  }
+  .rotate {
+    transform: rotate(180deg);
+  }
+  .dragTile {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+  
+  /* Анимации появления и исчезновения*/
+  
+  .slide-fade-enter-active {
+    transition: all 0.2s ease;
+  }
+  
+  .slide-fade-leave-active {
+    transition: all 0s ease;
+  }
+  
+  .slide-fade-enter,
+  .slide-fade-leave-to {
+    transform: translateX(-100px);
+    opacity: 0;
+  }
+  
+  .expand-container {
+    flex-grow: 2;
+    border-left: none;
+    transition: 0.5s;
+  }
+  
+  .dropdown-menu-priority {
+    width: 100%;
+    background-color: rgba(64, 65, 65, 0.904);
+    color: white;
+    border-radius: 17px 17px 17px 17px;
+  }
